@@ -29,9 +29,9 @@
         private void InitializeComponent()
         {
             this.retrivebutton = new System.Windows.Forms.Button();
-            this.radioButton2 = new System.Windows.Forms.RadioButton();
-            this.radioButton3 = new System.Windows.Forms.RadioButton();
-            this.radioButton1 = new System.Windows.Forms.RadioButton();
+            this.unreadRadioButton = new System.Windows.Forms.RadioButton();
+            this.allRadioButton = new System.Windows.Forms.RadioButton();
+            this.readRadioButton = new System.Windows.Forms.RadioButton();
             this.passwordTextBox = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.emailTextBox = new System.Windows.Forms.TextBox();
@@ -51,38 +51,38 @@
             this.retrivebutton.UseVisualStyleBackColor = true;
             this.retrivebutton.Click += new System.EventHandler(this.retrivebutton_Click);
             // 
-            // radioButton2
+            // unreadRadioButton
             // 
-            this.radioButton2.AutoSize = true;
-            this.radioButton2.Location = new System.Drawing.Point(135, 183);
-            this.radioButton2.Name = "radioButton2";
-            this.radioButton2.Size = new System.Drawing.Size(60, 17);
-            this.radioButton2.TabIndex = 14;
-            this.radioButton2.TabStop = true;
-            this.radioButton2.Text = "Unread";
-            this.radioButton2.UseVisualStyleBackColor = true;
+            this.unreadRadioButton.AutoSize = true;
+            this.unreadRadioButton.Location = new System.Drawing.Point(135, 183);
+            this.unreadRadioButton.Name = "unreadRadioButton";
+            this.unreadRadioButton.Size = new System.Drawing.Size(60, 17);
+            this.unreadRadioButton.TabIndex = 14;
+            this.unreadRadioButton.TabStop = true;
+            this.unreadRadioButton.Text = "Unread";
+            this.unreadRadioButton.UseVisualStyleBackColor = true;
             // 
-            // radioButton3
+            // allRadioButton
             // 
-            this.radioButton3.AutoSize = true;
-            this.radioButton3.Location = new System.Drawing.Point(135, 206);
-            this.radioButton3.Name = "radioButton3";
-            this.radioButton3.Size = new System.Drawing.Size(36, 17);
-            this.radioButton3.TabIndex = 15;
-            this.radioButton3.TabStop = true;
-            this.radioButton3.Text = "All";
-            this.radioButton3.UseVisualStyleBackColor = true;
+            this.allRadioButton.AutoSize = true;
+            this.allRadioButton.Location = new System.Drawing.Point(135, 206);
+            this.allRadioButton.Name = "allRadioButton";
+            this.allRadioButton.Size = new System.Drawing.Size(36, 17);
+            this.allRadioButton.TabIndex = 15;
+            this.allRadioButton.TabStop = true;
+            this.allRadioButton.Text = "All";
+            this.allRadioButton.UseVisualStyleBackColor = true;
             // 
-            // radioButton1
+            // readRadioButton
             // 
-            this.radioButton1.AutoSize = true;
-            this.radioButton1.Location = new System.Drawing.Point(135, 160);
-            this.radioButton1.Name = "radioButton1";
-            this.radioButton1.Size = new System.Drawing.Size(51, 17);
-            this.radioButton1.TabIndex = 16;
-            this.radioButton1.TabStop = true;
-            this.radioButton1.Text = "Read";
-            this.radioButton1.UseVisualStyleBackColor = true;
+            this.readRadioButton.AutoSize = true;
+            this.readRadioButton.Location = new System.Drawing.Point(135, 160);
+            this.readRadioButton.Name = "readRadioButton";
+            this.readRadioButton.Size = new System.Drawing.Size(51, 17);
+            this.readRadioButton.TabIndex = 16;
+            this.readRadioButton.TabStop = true;
+            this.readRadioButton.Text = "Read";
+            this.readRadioButton.UseVisualStyleBackColor = true;
             // 
             // passwordTextBox
             // 
@@ -151,9 +151,9 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(503, 360);
             this.Controls.Add(this.retrivebutton);
-            this.Controls.Add(this.radioButton2);
-            this.Controls.Add(this.radioButton3);
-            this.Controls.Add(this.radioButton1);
+            this.Controls.Add(this.unreadRadioButton);
+            this.Controls.Add(this.allRadioButton);
+            this.Controls.Add(this.readRadioButton);
             this.Controls.Add(this.passwordTextBox);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.emailTextBox);
@@ -163,6 +163,7 @@
             this.Controls.Add(this.label1);
             this.Name = "EmailFilterUI";
             this.Text = "Email Filter UI";
+            this.Load += new System.EventHandler(this.EmailFilterUI_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -171,9 +172,9 @@
         #endregion
 
         private System.Windows.Forms.Button retrivebutton;
-        private System.Windows.Forms.RadioButton radioButton2;
-        private System.Windows.Forms.RadioButton radioButton3;
-        private System.Windows.Forms.RadioButton radioButton1;
+        private System.Windows.Forms.RadioButton unreadRadioButton;
+        private System.Windows.Forms.RadioButton allRadioButton;
+        private System.Windows.Forms.RadioButton readRadioButton;
         private System.Windows.Forms.TextBox passwordTextBox;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox emailTextBox;

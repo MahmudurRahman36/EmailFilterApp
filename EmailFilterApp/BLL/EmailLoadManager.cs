@@ -21,6 +21,28 @@ namespace EmailFilterApp.BLL
 {
     class EmailLoadManager
     {
+        public GmailService GetService(string userName, string password)
+        {
+            UserCredential credential;
+            string[] tokens = userName.Split('@');
+            string[] Scopes = { GmailService.Scope.GmailReadonly };
+            const string applicationName = "Gmail API .NET Quickstart";
+            //using (var stream = new FileStream("client_secret_for_" + tokens[0] + ".json", FileMode.Open, FileAccess.Read))
+            using (var stream = new FileStream("client_secret_for_mrkolince.json", FileMode.Open, FileAccess.Read))
+            {
+                string credPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
+                credPath = Path.Combine(credPath, ".credentials/gmail-dotnet-quickstart-for-" + tokens[0] + ".json");
+                credential = GoogleWebAuthorizationBroker.AuthorizeAsync(GoogleClientSecrets.Load(stream).Secrets, Scopes,
+                    "user", CancellationToken.None, new FileDataStore(credPath, true)).Result;
+            }
+            var service = new GmailService(new BaseClientService.Initializer()
+            {
+                HttpClientInitializer = credential,
+                ApplicationName = applicationName,
+            });
+            return service;
+        }
+
         public static Message GetMessage(GmailService service, String userId, String messageId)
         {
             try
@@ -56,29 +78,7 @@ namespace EmailFilterApp.BLL
             return result;
         }
 
-        public GmailService GetService(string userName, string password)
-        {
-            UserCredential credential;
-            string[] tokens = userName.Split('@');
-            string[] Scopes = { GmailService.Scope.GmailReadonly };
-            string ApplicationName = "Gmail API .NET Quickstart";
-            using (var stream = new FileStream("client_secret_for_"+tokens[0]+".json", FileMode.Open, FileAccess.Read))
-            {
-                string credPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
-                credPath = Path.Combine(credPath, ".credentials/gmail-dotnet-quickstart-for-" + tokens[0] + ".json");
-                credential = GoogleWebAuthorizationBroker.AuthorizeAsync(GoogleClientSecrets.Load(stream).Secrets, Scopes,
-                    "user", CancellationToken.None, new FileDataStore(credPath, true)).Result;
-            }
-
-
-            var service = new GmailService(new BaseClientService.Initializer()
-            {
-                HttpClientInitializer = credential,
-                ApplicationName = ApplicationName,
-            });
-            UsersResource.LabelsResource.ListRequest request = service.Users.Labels.List("me");
-            return service;
-        }
+        
 
         public List<Message> GetFullMessages(GmailService service, string userName, List<Message> allMessages)
         {
@@ -165,17 +165,97 @@ namespace EmailFilterApp.BLL
             return messages;
         }
 
-        public void ProduceExcelFile(List<Email> messages)
+        public List<Message> GetOnlyUnreadMessages(List<Message> messages)
         {
+            List<Message> unreadMessages=new List<Message>();
+            foreach (Message message in messages)
+            {
+                IList<string> labels = message.LabelIds;
+                foreach (string label in labels)
+                {
+                    if (label.ToLower().Equals("unread".ToLower()))
+                    {
+                        unreadMessages.Add(message);
+                    }
+                }
+            }
+            return unreadMessages;
+        }
+        public List<Message> GetOnlyReadMessages(List<Message> messages)
+        {
+            List<Message> readMessages = new List<Message>();
+            bool isRead = true;
+            foreach (Message message in messages)
+            {
+                IList<string> labels = message.LabelIds;
+                isRead = true;
+                foreach (string label in labels)
+                {
+                    if (label.ToLower().Equals("unread".ToLower()))
+                    {
+                        isRead = false;
+                    }
+                }
+                if (isRead)
+                {
+                    readMessages.Add(message);
+                }
+            }
+            return readMessages;
+        }
+
+        public string GetMessageAttacthment(GmailService service, String userId,List<Message> messages )
+        {
+            string attachmentMessage = "";
+            foreach (Message message in messages)
+            {
+                attachmentMessage+=GetAttachments(service, userId, message.Id, "d:\\",message);
+            }
+            return attachmentMessage;
+        }
+        public string GetAttachments(GmailService service, String userId, String messageId, String outputDir, Message message)
+        {
+            string attachmentMessage = "";
+            try
+            {
+                IList<MessagePart> parts = message.Payload.Parts;
+                foreach (MessagePart part in parts)
+                {
+                    if (!String.IsNullOrEmpty(part.Filename))
+                    {
+                        String attId = part.Body.AttachmentId;
+                        MessagePartBody attachPart = service.Users.Messages.Attachments.Get(userId, messageId, attId).Execute();
+
+                        String attachData = attachPart.Data.Replace('-', '+');
+                        attachData = attachData.Replace('_', '/');
+
+                        byte[] data = Convert.FromBase64String(attachData);
+
+                        string[] fileType = part.Filename.Split('.');
+                        string[] fileName = userId.Split('@');
+                        File.WriteAllBytes(Path.Combine(outputDir, fileName[0] + "." + fileType[fileType.Length - 1]), data);
+                        attachmentMessage += userId + "'s " + "file has been saved as " + outputDir + fileName[0] + "." +
+                                             fileType[fileType.Length - 1] + "\n";
+                    }
+                }
+                
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("An error occurred: " + e.Message);
+            }
+            return attachmentMessage;
+        }
+        public string ProduceExcelFile(List<Email> messages,string status)
+        {
+            string excelMessage = "";
             Excel.Application xlApp = new Microsoft.Office.Interop.Excel.Application();
 
             if (xlApp == null)
             {
                 //MessageBox.Show("Excel is not properly installed!!");
-                return;
+                return excelMessage;
             }
-
-
             Excel.Workbook xlWorkBook;
             Excel.Worksheet xlWorkSheet;
             object misValue = System.Reflection.Missing.Value;
@@ -183,20 +263,24 @@ namespace EmailFilterApp.BLL
             xlWorkBook = xlApp.Workbooks.Add(misValue);
             xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
 
-            xlWorkSheet.Cells[1, 1] = "Applicant Name";
-            xlWorkSheet.Cells[1, 2] = "Contact No";
-            xlWorkSheet.Cells[1, 3] = "Email";
+            xlWorkSheet.Cells[1, 1] = "SL No.";
+            xlWorkSheet.Cells[1, 2] = "Applicant Name";
+            xlWorkSheet.Cells[1, 3] = "Contact No";
+            xlWorkSheet.Cells[1, 4] = "Email";
 
             int i = 2;
+            int slNo = 1;
             foreach (Email message in messages)
             {
-                xlWorkSheet.Cells[i, 1] = message.ApplicantName;
-                xlWorkSheet.Cells[i, 2] = message.ContactNo;
-                xlWorkSheet.Cells[i, 3] = message.From;
+                xlWorkSheet.Cells[i, 1] = slNo.ToString();
+                xlWorkSheet.Cells[i, 2] = message.ApplicantName;
+                xlWorkSheet.Cells[i, 3] = message.ContactNo;
+                xlWorkSheet.Cells[i, 4] = message.From;
                 i++;
+                slNo++;
             }
 
-            xlWorkBook.SaveAs("d:\\ApplicateInformation.xls", Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
+            xlWorkBook.SaveAs("d:\\ApplicantInformationOf"+status+".xls", Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
             xlWorkBook.Close(true, misValue, misValue);
             xlApp.Quit();
 
@@ -204,7 +288,7 @@ namespace EmailFilterApp.BLL
             Marshal.ReleaseComObject(xlWorkBook);
             Marshal.ReleaseComObject(xlApp);
 
-            MessageBox.Show("Excel file created , you can find the file d:\\ApplicateInformation.xls");
+           return "Excel file created , you can find the file d:\\ApplicantInformationOf" + status + ".xls";
         }
     }
 }
