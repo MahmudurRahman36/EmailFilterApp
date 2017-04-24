@@ -233,9 +233,20 @@ namespace EmailFilterApp.BLL
 
                         string[] fileType = part.Filename.Split('.');
                         string[] fileName = userId.Split('@');
-                        File.WriteAllBytes(Path.Combine(outputDir, fileName[0] + "." + fileType[fileType.Length - 1]), data);
-                        attachmentMessage += userId + "'s " + "file has been saved as " + outputDir + fileName[0] + "." +
-                                             fileType[fileType.Length - 1] + "\n";
+
+                        int i = 0;
+                        string outputDirectory=outputDir+ fileName[0]+ "." + fileType[fileType.Length - 1];
+                        while (File.Exists(outputDirectory))
+                        {
+                            i = i + 1;
+                            outputDirectory = outputDir + fileName[0] + "(" + i + ")" + "." + fileType[fileType.Length - 1];
+                            
+                        }
+
+                        File.WriteAllBytes(Path.Combine(outputDirectory,""), data);
+                       
+                        
+                        attachmentMessage += userId + "'s " + "file has been saved as " + outputDirectory+ "\n";
                     }
                 }
                 
@@ -280,7 +291,16 @@ namespace EmailFilterApp.BLL
                 slNo++;
             }
 
-            xlWorkBook.SaveAs("d:\\ApplicantInformationOf"+status+".xls", Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
+            int count = 0;
+            string outputDirectory = "d:\\ApplicantInformationOf"+status+".xls";
+            while (File.Exists(outputDirectory))
+            {
+                count = count + 1;
+                outputDirectory = "d:\\ApplicantInformationOf" + "(" + i + ")" + status + ".xls";
+
+            }
+
+            xlWorkBook.SaveAs(outputDirectory, Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
             xlWorkBook.Close(true, misValue, misValue);
             xlApp.Quit();
 
@@ -288,7 +308,7 @@ namespace EmailFilterApp.BLL
             Marshal.ReleaseComObject(xlWorkBook);
             Marshal.ReleaseComObject(xlApp);
 
-           return "Excel file created , you can find the file d:\\ApplicantInformationOf" + status + ".xls";
+            return "Excel file created , you can find the excel file at " + outputDirectory;
         }
     }
 }

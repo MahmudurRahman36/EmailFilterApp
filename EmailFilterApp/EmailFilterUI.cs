@@ -48,15 +48,25 @@ namespace EmailFilterApp
             allMessageInformation = fullMessages;
             HashSet<string> uniqueHeadersinHashSet = _emailLoadManager.GetUniqueHeaders(fullMessages);
             List<string> uniqueHeader = _emailLoadManager.GetHeaderInList(uniqueHeadersinHashSet);
+
             headerComboBox.Items.Clear();
+            headerComboBox.Items.Add("-------Select Subject of email------");
             foreach (string header in uniqueHeader)
             {
                 headerComboBox.Items.Add(header);
             }
+
+            MessageBox.Show("Dropdown Loaded for Messages Subject");
         }
 
         private void retrivebutton_Click(object sender, EventArgs e)
         {
+            string userName = emailTextBox.Text.ToLower();
+            string password = passwordTextBox.Text;
+
+            string[] tokens = userName.Split('@');
+            userName = tokens[0] + "@gmail.com";
+
             string notificationMessage = "";
             string selectedHeader = headerComboBox.SelectedItem.ToString();
             List<Message> selectedMessages = _emailLoadManager.GetSelectedMessages(allMessageInformation, selectedHeader);
@@ -71,7 +81,7 @@ namespace EmailFilterApp
                 selectedMessages = _emailLoadManager.GetOnlyUnreadMessages(selectedMessages);
                 status = "OnlyUnreadMessages";
             }
-            notificationMessage+=_emailLoadManager.GetMessageAttacthment(service, emailTextBox.Text, selectedMessages);
+            notificationMessage+=_emailLoadManager.GetMessageAttacthment(service, userName, selectedMessages);
             List<Email> messages = _emailLoadManager.GetMessagesInFormatedWay(selectedMessages);
             notificationMessage+=_emailLoadManager.ProduceExcelFile(messages, status);
             MessageBox.Show(notificationMessage);
