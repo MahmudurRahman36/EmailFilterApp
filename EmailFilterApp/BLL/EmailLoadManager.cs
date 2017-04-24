@@ -21,13 +21,12 @@ namespace EmailFilterApp.BLL
 {
     class EmailLoadManager
     {
-        public GmailService GetService(string userName, string password)
+        public GmailService GetService(string userName)
         {
             UserCredential credential;
             string[] tokens = userName.Split('@');
             string[] Scopes = { GmailService.Scope.GmailReadonly };
             const string applicationName = "Gmail API .NET Quickstart";
-            //using (var stream = new FileStream("client_secret_for_" + tokens[0] + ".json", FileMode.Open, FileAccess.Read))
             using (var stream = new FileStream("client_secret_for_mrkolince.json", FileMode.Open, FileAccess.Read))
             {
                 string credPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
@@ -43,7 +42,7 @@ namespace EmailFilterApp.BLL
             return service;
         }
 
-        public static Message GetMessage(GmailService service, String userId, String messageId)
+        public Message GetMessage(GmailService service, String userId, String messageId)
         {
             try
             {
@@ -71,25 +70,38 @@ namespace EmailFilterApp.BLL
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine("An error occurred: " + e.Message);
+                    string[] tokens = e.Message.Split('.');
+                    if (tokens[0].Equals("An error occurred while sending the request"))
+                    {
+                        MessageBox.Show("Please Check your internet Connection. Could not seed request");
+                    }
+                    else if (tokens[0].Equals("Google"))
+                    {
+                        DeleteFile(userId);
+                        MessageBox.Show("Sorry but have to authenticate your account from browser only from request email address");
+                    }
+                    else
+                    {
+                        DeleteFile(userId);
+                        MessageBox.Show("Some problem occured while connecting with requested account please try again");
+                    }
                 }
             } while (!String.IsNullOrEmpty(request.PageToken));
 
             return result;
         }
 
-        
-
-        public List<Message> GetFullMessages(GmailService service, string userName, List<Message> allMessages)
+        public bool DeleteFile(string userName)
         {
-            List<Message> newMessages = new List<Message>();
-
-            foreach (var message1 in allMessages)
+            string[] tokens = userName.Split('@');
+            string credPath = System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal);
+            credPath = Path.Combine(credPath, ".credentials\\gmail-dotnet-quickstart-for-" + tokens[0] + ".json\\Google.Apis.Auth.OAuth2.Responses.TokenResponse-user");
+            if (File.Exists(credPath))
             {
-                Message message2 = GetMessage(service, userName, message1.Id);
-                newMessages.Add(message2);
+                File.Delete(credPath);
+                return true;
             }
-            return newMessages;
+            return false;
         }
         public HashSet<string> GetUniqueHeaders(List<Message> allMessages)
         {
@@ -147,6 +159,10 @@ namespace EmailFilterApp.BLL
                 Email email = new Email();
                 email.Body = message.Snippet;
                 string[] tokens = email.Body.Split(':');
+                if (!tokens[0].Equals("Applicant Name")||tokens.Count()<4)
+                {
+                    goto Finish;
+                }
                 email.ApplicantName = tokens[1].Substring(1, tokens[1].Length - 14);
                 email.From = tokens[2].Substring(1, tokens[2].Length - 16);
                 email.ContactNo = tokens[3].Substring(1, tokens[3].Length - 9);
@@ -160,6 +176,8 @@ namespace EmailFilterApp.BLL
                     }
                 }
                 messages.Add(email);
+                Finish:
+                string forTest = "forTest";
             }
             messages = messages.OrderByDescending(e => e.DateTime).ToList();
             return messages;
