@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using EmailFilterApp.UI;
 
 namespace EmailFilterApp
 {
@@ -16,7 +17,7 @@ namespace EmailFilterApp
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new EmailFilterUI());
+            Application.Run(new EmailFilterUi());
         }
     }
 }

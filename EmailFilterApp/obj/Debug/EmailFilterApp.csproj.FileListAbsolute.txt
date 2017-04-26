@@ -63,16 +63,15 @@ G:\New folder (5)\EmailFilterApp\EmailFilterApp\obj\Debug\EmailFilterApp.EmailFi
 G:\New folder (5)\EmailFilterApp\EmailFilterApp\obj\Debug\EmailFilterApp.Properties.Resources.resources
 G:\New folder (5)\EmailFilterApp\EmailFilterApp\obj\Debug\EmailFilterApp.csproj.GenerateResource.Cache
 G:\Projects\EmailFilterApp\EmailFilterApp\bin\Debug\EmailFilterApp.exe.config
-G:\Projects\EmailFilterApp\EmailFilterApp\obj\Debug\EmailFilterApp.csproj.ResolveComReference.cache
-G:\Projects\EmailFilterApp\EmailFilterApp\obj\Debug\EmailFilterApp.exe
-G:\Projects\EmailFilterApp\EmailFilterApp\obj\Debug\EmailFilterApp.pdb
 G:\Projects\EmailFilterApp\EmailFilterApp\bin\Debug\EmailFilterApp.exe
+G:\Projects\EmailFilterApp\EmailFilterApp\bin\Debug\EmailFilterApp.pdb
 G:\Projects\EmailFilterApp\EmailFilterApp\bin\Debug\Google.Apis.Auth.dll
 G:\Projects\EmailFilterApp\EmailFilterApp\bin\Debug\Google.Apis.Auth.PlatformServices.dll
 G:\Projects\EmailFilterApp\EmailFilterApp\bin\Debug\Google.Apis.Core.dll
 G:\Projects\EmailFilterApp\EmailFilterApp\bin\Debug\Google.Apis.dll
 G:\Projects\EmailFilterApp\EmailFilterApp\bin\Debug\Google.Apis.Gmail.v1.dll
 G:\Projects\EmailFilterApp\EmailFilterApp\bin\Debug\Google.Apis.PlatformServices.dll
+G:\Projects\EmailFilterApp\EmailFilterApp\bin\Debug\MetroFramework.dll
 G:\Projects\EmailFilterApp\EmailFilterApp\bin\Debug\Newtonsoft.Json.dll
 G:\Projects\EmailFilterApp\EmailFilterApp\bin\Debug\Zlib.Portable.dll
 G:\Projects\EmailFilterApp\EmailFilterApp\bin\Debug\Google.Apis.pdb
@@ -89,7 +88,9 @@ G:\Projects\EmailFilterApp\EmailFilterApp\bin\Debug\Google.Apis.PlatformServices
 G:\Projects\EmailFilterApp\EmailFilterApp\bin\Debug\Google.Apis.PlatformServices.xml
 G:\Projects\EmailFilterApp\EmailFilterApp\bin\Debug\Newtonsoft.Json.xml
 G:\Projects\EmailFilterApp\EmailFilterApp\bin\Debug\Zlib.Portable.xml
-G:\Projects\EmailFilterApp\EmailFilterApp\obj\Debug\EmailFilterApp.EmailFilterUI.resources
+G:\Projects\EmailFilterApp\EmailFilterApp\obj\Debug\EmailFilterApp.csproj.ResolveComReference.cache
+G:\Projects\EmailFilterApp\EmailFilterApp\obj\Debug\EmailFilterApp.UI.EmailFilterUi.resources
 G:\Projects\EmailFilterApp\EmailFilterApp\obj\Debug\EmailFilterApp.Properties.Resources.resources
 G:\Projects\EmailFilterApp\EmailFilterApp\obj\Debug\EmailFilterApp.csproj.GenerateResource.Cache
-G:\Projects\EmailFilterApp\EmailFilterApp\bin\Debug\EmailFilterApp.pdb
+G:\Projects\EmailFilterApp\EmailFilterApp\obj\Debug\EmailFilterApp.exe
+G:\Projects\EmailFilterApp\EmailFilterApp\obj\Debug\EmailFilterApp.pdb

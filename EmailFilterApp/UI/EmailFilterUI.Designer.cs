@@ -1,6 +1,6 @@
-﻿namespace EmailFilterApp
+﻿namespace EmailFilterApp.UI
 {
-    partial class EmailFilterUI
+    partial class EmailFilterUi
     {
         /// <summary>
         /// Required designer variable.
@@ -40,11 +40,15 @@
             this.dropdownLoadProgressBar = new System.Windows.Forms.ProgressBar();
             this.pleaseWaitLabel = new System.Windows.Forms.Label();
             this.deleteAuthenticationButton = new System.Windows.Forms.Button();
+            this.getAttachmentCheckBox = new System.Windows.Forms.CheckBox();
+            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.folderBrowserDialog1 = new System.Windows.Forms.FolderBrowserDialog();
+            this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.SuspendLayout();
             // 
             // retrivebutton
             // 
-            this.retrivebutton.Location = new System.Drawing.Point(135, 257);
+            this.retrivebutton.Location = new System.Drawing.Point(135, 293);
             this.retrivebutton.Name = "retrivebutton";
             this.retrivebutton.Size = new System.Drawing.Size(75, 23);
             this.retrivebutton.TabIndex = 7;
@@ -55,7 +59,7 @@
             // unreadRadioButton
             // 
             this.unreadRadioButton.AutoSize = true;
-            this.unreadRadioButton.Location = new System.Drawing.Point(135, 210);
+            this.unreadRadioButton.Location = new System.Drawing.Point(135, 247);
             this.unreadRadioButton.Name = "unreadRadioButton";
             this.unreadRadioButton.Size = new System.Drawing.Size(60, 17);
             this.unreadRadioButton.TabIndex = 5;
@@ -66,7 +70,7 @@
             // allRadioButton
             // 
             this.allRadioButton.AutoSize = true;
-            this.allRadioButton.Location = new System.Drawing.Point(135, 233);
+            this.allRadioButton.Location = new System.Drawing.Point(135, 270);
             this.allRadioButton.Name = "allRadioButton";
             this.allRadioButton.Size = new System.Drawing.Size(36, 17);
             this.allRadioButton.TabIndex = 6;
@@ -77,7 +81,7 @@
             // readRadioButton
             // 
             this.readRadioButton.AutoSize = true;
-            this.readRadioButton.Location = new System.Drawing.Point(135, 187);
+            this.readRadioButton.Location = new System.Drawing.Point(135, 224);
             this.readRadioButton.Name = "readRadioButton";
             this.readRadioButton.Size = new System.Drawing.Size(51, 17);
             this.readRadioButton.TabIndex = 4;
@@ -150,7 +154,7 @@
             // 
             // deleteAuthenticationButton
             // 
-            this.deleteAuthenticationButton.Location = new System.Drawing.Point(374, 18);
+            this.deleteAuthenticationButton.Location = new System.Drawing.Point(340, 20);
             this.deleteAuthenticationButton.Name = "deleteAuthenticationButton";
             this.deleteAuthenticationButton.Size = new System.Drawing.Size(117, 23);
             this.deleteAuthenticationButton.TabIndex = 13;
@@ -158,11 +162,26 @@
             this.deleteAuthenticationButton.UseVisualStyleBackColor = true;
             this.deleteAuthenticationButton.Click += new System.EventHandler(this.deleteAuthenticationButton_Click);
             // 
+            // getAttachmentCheckBox
+            // 
+            this.getAttachmentCheckBox.AutoSize = true;
+            this.getAttachmentCheckBox.Location = new System.Drawing.Point(135, 188);
+            this.getAttachmentCheckBox.Name = "getAttachmentCheckBox";
+            this.getAttachmentCheckBox.Size = new System.Drawing.Size(114, 17);
+            this.getAttachmentCheckBox.TabIndex = 14;
+            this.getAttachmentCheckBox.Text = "Get All Attachment";
+            this.getAttachmentCheckBox.UseVisualStyleBackColor = true;
+            // 
+            // openFileDialog1
+            // 
+            this.openFileDialog1.FileName = "openFileDialog1";
+            // 
             // EmailFilterUI
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(513, 360);
+            this.Controls.Add(this.getAttachmentCheckBox);
             this.Controls.Add(this.deleteAuthenticationButton);
             this.Controls.Add(this.pleaseWaitLabel);
             this.Controls.Add(this.dropdownLoadProgressBar);
@@ -175,7 +194,7 @@
             this.Controls.Add(this.loadbutton);
             this.Controls.Add(this.headerComboBox);
             this.Controls.Add(this.label1);
-            this.Name = "EmailFilterUI";
+            this.Name = "EmailFilterUi";
             this.Text = "Email Filter UI";
             this.Load += new System.EventHandler(this.EmailFilterUI_Load);
             this.ResumeLayout(false);
@@ -197,6 +216,10 @@
         private System.Windows.Forms.ProgressBar dropdownLoadProgressBar;
         private System.Windows.Forms.Label pleaseWaitLabel;
         private System.Windows.Forms.Button deleteAuthenticationButton;
+        private System.Windows.Forms.CheckBox getAttachmentCheckBox;
+        private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.FolderBrowserDialog folderBrowserDialog1;
+        private System.Windows.Forms.SaveFileDialog saveFileDialog1;
     }
 }
 

@@ -50,6 +50,9 @@
     <Reference Include="Google.Apis.PlatformServices">
       <HintPath>..\packages\Google.Apis.1.25.0\lib\net45\Google.Apis.PlatformServices.dll</HintPath>
     </Reference>
+    <Reference Include="MetroFramework">
+      <HintPath>lib\MetroFramework.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
@@ -71,17 +74,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BLL\EmailLoadManager.cs" />
-    <Compile Include="EmailFilterUI.cs">
+    <Compile Include="UI\EmailFilterUI.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="EmailFilterUI.Designer.cs">
+    <Compile Include="UI\EmailFilterUI.Designer.cs">
       <DependentUpon>EmailFilterUI.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\Email.cs" />
     <Compile Include="Models\Variables.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="EmailFilterUI.resx">
+    <EmbeddedResource Include="UI\EmailFilterUI.resx">
       <DependentUpon>EmailFilterUI.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -136,7 +139,11 @@
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </COMReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="lib\MetroFramework.Design.dll" />
+    <Content Include="lib\MetroFramework.dll" />
+    <Content Include="lib\MetroFramework.Fonts.dll" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

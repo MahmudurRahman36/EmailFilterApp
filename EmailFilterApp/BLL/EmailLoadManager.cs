@@ -50,14 +50,14 @@ namespace EmailFilterApp.BLL
             }
             catch (Exception e)
             {
-                Console.WriteLine("An error occurred: " + e.Message);
+                Console.WriteLine(@"An error occurred: " + e.Message);
             }
 
             return null;
         }
         public List<Message> ListMessages(GmailService service, String userId, String query)
         {
-            List<Message> result = new List<Message>();
+            var result = new List<Message>();
             UsersResource.MessagesResource.ListRequest request = service.Users.Messages.List(userId);
             request.Q = query;
             do
@@ -73,17 +73,17 @@ namespace EmailFilterApp.BLL
                     string[] tokens = e.Message.Split('.');
                     if (tokens[0].Equals("An error occurred while sending the request"))
                     {
-                        MessageBox.Show("Please Check your internet Connection. Could not seed request");
+                        MessageBox.Show(@"Please Check your internet Connection. Could not seed request");
                     }
                     else if (tokens[0].Equals("Google"))
                     {
                         DeleteFile(userId);
-                        MessageBox.Show("Sorry but have to authenticate your account from browser only from request email address");
+                        MessageBox.Show(@"The provided email address and sign in email address in browser are not same. Please sign in with provided email address. and Try again");
                     }
                     else
                     {
                         DeleteFile(userId);
-                        MessageBox.Show("Some problem occured while connecting with requested account please try again");
+                        MessageBox.Show(@"Some problem occured while connecting with requested account please try again");
                     }
                 }
             } while (!String.IsNullOrEmpty(request.PageToken));
@@ -107,56 +107,33 @@ namespace EmailFilterApp.BLL
         {
 
 
-            List<string> headerList = new List<string>();
+            var headerList = new List<string>();
 
             foreach (var body in allMessages)
             {
                 IList<MessagePartHeader> headerPart = body.Payload.Headers;
-                foreach (MessagePartHeader messagePartHeader in headerPart)
-                {
-                    if (messagePartHeader.Name.Equals("Subject"))
-                    {
-                        headerList.Add(messagePartHeader.Value);
-                    }
-                }
+                headerList.AddRange(from messagePartHeader in headerPart where messagePartHeader.Name.Equals("Subject") select messagePartHeader.Value);
             }
-            var unique_headers = new HashSet<string>(headerList);
-            return unique_headers;
+            var uniqueHeaders = new HashSet<string>(headerList);
+            return uniqueHeaders;
         }
 
         public List<string> GetHeaderInList(HashSet<string> uniqueHeaders)
         {
-            List<string> list = new List<string>();
-            foreach (string header in uniqueHeaders)
-            {
-                list.Add(header);
-            }
-            return list;
+            return uniqueHeaders.ToList();
         }
 
         public List<Message> GetSelectedMessages(List<Message> allMessages, string header)
         {
-            List<Message> selecetdMessages = new List<Message>();
-            foreach (Message message in allMessages)
-            {
-                IList<MessagePartHeader> headerPart = message.Payload.Headers;
-                foreach (MessagePartHeader messagePartHeader in headerPart)
-                {
-                    if (messagePartHeader.Name.Equals("Subject") && messagePartHeader.Value.Equals(header))
-                    {
-                        selecetdMessages.Add(message);
-                    }
-                }
-            }
-            return selecetdMessages;
+            return (from message in allMessages let headerPart = message.Payload.Headers from messagePartHeader in headerPart where messagePartHeader.Name.Equals("Subject") && messagePartHeader.Value.Equals(header) select message).ToList();
         }
 
         public List<Email> GetMessagesInFormatedWay(List<Message> allMessages)
         {
-            List<Email> messages = new List<Email>();
+            var messages = new List<Email>();
             foreach (Message message in allMessages)
             {
-                Email email = new Email();
+                var email = new Email();
                 email.Body = message.Snippet;
                 string[] tokens = email.Body.Split(':');
                 if (!tokens[0].Equals("Applicant Name")||tokens.Count()<4)
@@ -185,34 +162,19 @@ namespace EmailFilterApp.BLL
 
         public List<Message> GetOnlyUnreadMessages(List<Message> messages)
         {
-            List<Message> unreadMessages=new List<Message>();
-            foreach (Message message in messages)
-            {
-                IList<string> labels = message.LabelIds;
-                foreach (string label in labels)
-                {
-                    if (label.ToLower().Equals("unread".ToLower()))
-                    {
-                        unreadMessages.Add(message);
-                    }
-                }
-            }
-            return unreadMessages;
+            return (from message in messages let labels = message.LabelIds from label in labels where label.ToLower().Equals("unread".ToLower()) select message).ToList();
         }
+
         public List<Message> GetOnlyReadMessages(List<Message> messages)
         {
-            List<Message> readMessages = new List<Message>();
-            bool isRead = true;
+            var readMessages = new List<Message>();
             foreach (Message message in messages)
             {
                 IList<string> labels = message.LabelIds;
-                isRead = true;
-                foreach (string label in labels)
+                bool isRead = true;
+                foreach (string label in labels.Where(label => label.ToLower().Equals("unread".ToLower())))
                 {
-                    if (label.ToLower().Equals("unread".ToLower()))
-                    {
-                        isRead = false;
-                    }
+                    isRead = false;
                 }
                 if (isRead)
                 {
@@ -222,15 +184,11 @@ namespace EmailFilterApp.BLL
             return readMessages;
         }
 
-        public string GetMessageAttacthment(GmailService service, String userId,List<Message> messages )
+        public string GetMessageAttacthment(GmailService service, String userId, List<Message> messages, string dictonary)
         {
-            string attachmentMessage = "";
-            foreach (Message message in messages)
-            {
-                attachmentMessage+=GetAttachments(service, userId, message.Id, "d:\\",message);
-            }
-            return attachmentMessage;
+            return messages.Aggregate("", (current, message) => current + GetAttachments(service, userId, message.Id, dictonary + "\\", message));
         }
+
         public string GetAttachments(GmailService service, String userId, String messageId, String outputDir, Message message)
         {
             string attachmentMessage = "";
@@ -271,26 +229,17 @@ namespace EmailFilterApp.BLL
             }
             catch (Exception e)
             {
-                Console.WriteLine("An error occurred: " + e.Message);
+                Console.WriteLine(@"An error occurred: " + e.Message);
             }
             return attachmentMessage;
         }
-        public string ProduceExcelFile(List<Email> messages,string status)
+        public string ProduceExcelFile(List<Email> messages,string status,string dictonary)
         {
-            string excelMessage = "";
-            Excel.Application xlApp = new Microsoft.Office.Interop.Excel.Application();
-
-            if (xlApp == null)
-            {
-                //MessageBox.Show("Excel is not properly installed!!");
-                return excelMessage;
-            }
-            Excel.Workbook xlWorkBook;
-            Excel.Worksheet xlWorkSheet;
+            var xlApp = new Microsoft.Office.Interop.Excel.Application();
             object misValue = System.Reflection.Missing.Value;
 
-            xlWorkBook = xlApp.Workbooks.Add(misValue);
-            xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.get_Item(1);
+            Excel.Workbook xlWorkBook = xlApp.Workbooks.Add(misValue);
+            var xlWorkSheet = (Excel.Worksheet)xlWorkBook.Worksheets.Item[1];
 
             xlWorkSheet.Cells[1, 1] = "SL No.";
             xlWorkSheet.Cells[1, 2] = "Applicant Name";
@@ -310,12 +259,11 @@ namespace EmailFilterApp.BLL
             }
 
             int count = 0;
-            string outputDirectory = "d:\\ApplicantInformationOf"+status+".xls";
+            string outputDirectory = dictonary+"\\ApplicantInformationOf"+status+".xls";
             while (File.Exists(outputDirectory))
             {
                 count = count + 1;
-                outputDirectory = "d:\\ApplicantInformationOf" + "(" + i + ")" + status + ".xls";
-
+                outputDirectory = dictonary + "\\ApplicantInformationOf" + status + "(" + i + ")" + ".xls";
             }
 
             xlWorkBook.SaveAs(outputDirectory, Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
@@ -326,7 +274,7 @@ namespace EmailFilterApp.BLL
             Marshal.ReleaseComObject(xlWorkBook);
             Marshal.ReleaseComObject(xlApp);
 
-            return "Excel file created , you can find the excel file at " + outputDirectory;
+            return @"Excel file created , you can find the excel file at " + outputDirectory;
         }
     }
 }
