@@ -83,6 +83,11 @@ namespace EmailFilterApp.UI
                 MessageBox.Show(@"Please load the messages and dropdown first");
                 return;
             }
+            if (headerComboBox.SelectedItem==null)
+            {
+                MessageBox.Show(@"Please select a Subject of Message First");
+                return;
+            }
             string[] tokens = userName.Split('@');
             userName = tokens[0] + "@gmail.com";
             if (!userName.Equals(_userName))
@@ -111,10 +116,9 @@ namespace EmailFilterApp.UI
                 MessageBox.Show(@"All condition did not fulfill any message");
                 return;
             }
-
-
-            MessageBox.Show(@"Give Location for saving Excel File.");
+            
             List<Email> messages = _emailLoadManager.GetMessagesInFormatedWay(selectedMessages);
+            MessageBox.Show(@"Give Location for saving Excel File.");
             folderBrowserDialog1.ShowDialog();
             string dictonary = folderBrowserDialog1.SelectedPath;           
             notificationMessage+=_emailLoadManager.ProduceExcelFile(messages, status,dictonary);

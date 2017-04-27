@@ -141,8 +141,8 @@ namespace EmailFilterApp.BLL
                     goto Finish;
                 }
                 email.ApplicantName = tokens[1].Substring(1, tokens[1].Length - 14);
-                email.From = tokens[2].Substring(1, tokens[2].Length - 16);
-                email.ContactNo = tokens[3].Substring(1, tokens[3].Length - 9);
+                email.From = tokens[2].Split(' ')[1];
+                email.ContactNo = tokens[3].Split(' ')[1];
 
                 IList<MessagePartHeader> headerPart = message.Payload.Headers;
                 foreach (MessagePartHeader messagePartHeader in headerPart)
@@ -263,7 +263,7 @@ namespace EmailFilterApp.BLL
             while (File.Exists(outputDirectory))
             {
                 count = count + 1;
-                outputDirectory = dictonary + "\\ApplicantInformationOf" + status + "(" + i + ")" + ".xls";
+                outputDirectory = dictonary + "\\ApplicantInformationOf" + status + "(" + count + ")" + ".xls";
             }
 
             xlWorkBook.SaveAs(outputDirectory, Excel.XlFileFormat.xlWorkbookNormal, misValue, misValue, misValue, misValue, Excel.XlSaveAsAccessMode.xlExclusive, misValue, misValue, misValue, misValue, misValue);
@@ -274,7 +274,7 @@ namespace EmailFilterApp.BLL
             Marshal.ReleaseComObject(xlWorkBook);
             Marshal.ReleaseComObject(xlApp);
 
-            return @"Excel file created , you can find the excel file at " + outputDirectory;
+            return @"Excel file created , you can find the excel file at " + outputDirectory+"\n";
         }
     }
 }
